@@ -10,7 +10,7 @@ class AdminController extends Controller
     public function dashboard()
     {
         // Atur detik sebelum riwayat dihapus (misal 30 detik)
-        $hapusDetik = 1000; // ganti sesuai kebutuhan
+        $hapusDetik = 999999; // ganti sesuai kebutuhan
 
         // Hitung batas waktu
         $batas = Carbon::now()->subSeconds($hapusDetik);
