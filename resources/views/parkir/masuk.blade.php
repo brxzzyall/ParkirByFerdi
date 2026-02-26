@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div style="min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; overflow: hidden;">
+<div style="min-height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); display: flex; align-items: center; justify-content: center; padding: 2rem; position: relative; overflow: hidden;">
     {{-- Animated Background Elements --}}
-    <div style="position: absolute; width: 300px; height: 300px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; top: -100px; left: -100px; animation: float 8s ease-in-out infinite;"></div>
-    <div style="position: absolute; width: 200px; height: 200px; background: rgba(255, 255, 255, 0.05); border-radius: 50%; bottom: -50px; right: -50px; animation: float 10s ease-in-out infinite; animation-delay: 2s;"></div>
+    <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(17, 153, 142, 0.15) 0%, transparent 70%); border-radius: 50%; top: -100px; left: -100px; animation: float 8s ease-in-out infinite;"></div>
+    <div style="position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(56, 239, 125, 0.1) 0%, transparent 70%); border-radius: 50%; bottom: -50px; right: -50px; animation: float 10s ease-in-out infinite; animation-delay: 2s;"></div>
 
     <div style="width: 100%; max-width: 520px; position: relative; z-index: 10;">
         {{-- Alerts --}}
@@ -35,7 +35,7 @@
         {{-- Card Container --}}
         <div style="background: white; border-radius: 24px; box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25), 0 0 1px rgba(0, 0, 0, 0.1); overflow: hidden; animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); backdrop-filter: blur(20px);">
             {{-- Header --}}
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 48px 40px; text-align: center; position: relative; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 48px 40px; text-align: center; position: relative; overflow: hidden;">
                 <div style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
                 <div style="position: absolute; bottom: -30px; left: -30px; width: 100px; height: 100px; background: rgba(255, 255, 255, 0.1); border-radius: 50%;"></div>
                 
@@ -63,7 +63,7 @@
                                 style="width: 100%; padding: 16px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 15px; font-family: 'Poppins', sans-serif; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); background: #f9fafb; box-sizing: border-box; letter-spacing: 0.5px;"
                                 @error('nomor_kendaraan') style="border-color: #f12711; background: rgba(241, 39, 17, 0.05);" @enderror
                                 onblur="this.style.borderColor = '#e5e7eb'; this.style.boxShadow = 'none';"
-                                onfocus="this.style.borderColor = '#667eea'; this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)'; this.style.background = '#ffffff';"
+                                onfocus="this.style.borderColor = '#11998e'; this.style.boxShadow = '0 0 0 3px rgba(17, 153, 142, 0.1)'; this.style.background = '#ffffff';"
                             >
                             <span style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; opacity: 0.3;">📝</span>
                         </div>
@@ -84,7 +84,7 @@
                                 style="width: 100%; padding: 16px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 15px; font-family: 'Poppins', sans-serif; background: #f9fafb; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; appearance: none; box-sizing: border-box;"
                                 @error('jenis_kendaraan') style="border-color: #f12711; background: rgba(241, 39, 17, 0.05);" @enderror
                                 onblur="this.style.borderColor = '#e5e7eb'; this.style.boxShadow = 'none';"
-                                onfocus="this.style.borderColor = '#667eea'; this.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)'; this.style.background = '#ffffff';"
+                                onfocus="this.style.borderColor = '#11998e'; this.style.boxShadow = '0 0 0 3px rgba(17, 153, 142, 0.1)'; this.style.background = '#ffffff';"
                             >
                                 <option value="">-- Pilih Jenis Kendaraan --</option>
                                 <option value="Motor">🏍️ Motor</option>
@@ -100,16 +100,16 @@
                     {{-- Submit Button --}}
                     <button 
                         type="submit" 
-                        style="width: 100%; padding: 18px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 12px 28px rgba(102, 126, 234, 0.35); letter-spacing: 0.6px; position: relative; overflow: hidden; animation: slideIn 0.6s ease 0.3s backwards;"
-                        onmouseover="this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 18px 45px rgba(102, 126, 234, 0.5)';"
-                        onmouseout="this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 12px 28px rgba(102, 126, 234, 0.35)';"
+                        style="width: 100%; padding: 18px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 12px 28px rgba(17, 153, 142, 0.35); letter-spacing: 0.6px; position: relative; overflow: hidden; animation: slideIn 0.6s ease 0.3s backwards;"
+                        onmouseover="this.style.transform = 'translateY(-3px)'; this.style.boxShadow = '0 18px 45px rgba(17, 153, 142, 0.5)' ;"
+                        onmouseout="this.style.transform = 'translateY(0)'; this.style.boxShadow = '0 12px 28px rgba(17, 153, 142, 0.35)';"
                     >
                         ✓ Masuk Parkir
                     </button>
                 </form>
 
                 {{-- Info Box --}}
-                <div style="margin-top: 36px; padding: 24px; background: linear-gradient(135deg, rgba(102, 126, 234, 0.12) 0%, rgba(118, 75, 162, 0.08) 100%); border-radius: 16px; border-left: 6px solid #667eea; backdrop-filter: blur(10px); animation: slideIn 0.6s ease 0.4s backwards;">
+                <div style="margin-top: 36px; padding: 24px; background: linear-gradient(135deg, rgba(17, 153, 142, 0.12) 0%, rgba(56, 239, 125, 0.08) 100%); border-radius: 16px; border-left: 6px solid #11998e; backdrop-filter: blur(10px); animation: slideIn 0.6s ease 0.4s backwards;">
                     <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.7; font-weight: 500;">
                         <strong style="color: #1f2937; display: block; margin-bottom: 8px;">ℹ️ Catatan Penting:</strong>
                         <span style="font-size: 13px; color: #4b5563; display: block;">Pastikan nomor kendaraan sudah benar sebelum melanjutkan. Data akan tercatat dalam sistem parkir kami secara otomatis dan real-time.</span>

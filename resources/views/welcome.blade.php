@@ -1,528 +1,578 @@
 @extends('layouts.master')
 
-@section('title', 'Parkir Manager - Smart Parking Solution')
+@section('title', 'ParkSmart — Sistem Parkir Modern')
 
 @section('styles')
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+    /* Override main container for welcome page */
+    body > main {
+        padding: 0 !important;
+        max-width: 100% !important;
     }
-
-    html, body {
-        height: 100%;
+    
+    .app-footer {
+        display: none !important;
     }
 
     body {
-        font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #fff;
+        background: var(--dark);
+        color: white;
         min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        overflow-x: hidden;
     }
 
-    .navbar {
-        background: rgba(30, 30, 50, 0.95);
-        backdrop-filter: blur(15px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 1.2rem 0;
-        position: sticky;
+    /* ── Navbar ── */
+    .site-navbar {
+        position: fixed;
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 1000;
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        padding: 0;
     }
-
-    .navbar .container {
+    .site-navbar .inner {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 2rem;
+        height: 68px;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
-
-    .navbar-brand {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #fff;
+    .brand {
         display: flex;
         align-items: center;
-        gap: 0.875rem;
+        gap: 12px;
         text-decoration: none;
-        letter-spacing: -0.5px;
+        color: white;
     }
-
-    .brand-icon {
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .brand-logo {
+        width: 42px;
+        height: 42px;
+        background: var(--gradient-primary);
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.75rem;
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        font-size: 20px;
+        box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+        flex-shrink: 0;
     }
-
-    .navbar-nav {
-        display: flex;
-        gap: 2rem;
-    }
-
-    .navbar-nav a {
-        color: rgba(255, 255, 255, 0.85);
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.95rem;
-        transition: color 0.3s ease;
-        position: relative;
-    }
-
-    .navbar-nav a::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #667eea, #764ba2);
-        transition: width 0.3s ease;
-    }
-
-    .navbar-nav a:hover {
-        color: #fff;
-    }
-
-    .navbar-nav a:hover::after {
-        width: 100%;
-    }
-
-    .navbar-nav form {
-        display: inline;
-    }
-
-    .navbar-nav button {
-        color: rgba(255, 255, 255, 0.85);
-        background: none;
-        border: none;
-        font-weight: 500;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        padding: 0;
-    }
-
-    .navbar-nav button:hover {
-        color: #fff;
-    }
-
-    .hero-section {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 20px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 600px;
-        height: 600px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 50%;
-        filter: blur(50px);
-        animation: float 6s ease-in-out infinite;
-    }
-
-    .hero-section::after {
-        content: '';
-        position: absolute;
-        bottom: -30%;
-        left: -5%;
-        width: 400px;
-        height: 400px;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 50%;
-        filter: blur(40px);
-    }
-
-    .hero-content {
-        text-align: center;
-        z-index: 10;
-        color: #fff;
-        max-width: 700px;
-        animation: fadeInUp 0.8s ease 0.2s both;
-    }
-
-    .hero-content h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        letter-spacing: -1px;
-    }
-
-    .hero-content p {
-        font-size: 1.15rem;
-        margin-bottom: 2.5rem;
-        opacity: 0.95;
-        line-height: 1.8;
-        font-weight: 400;
-    }
-
-    .hero-buttons {
-        display: flex;
-        gap: 1.5rem;
-        justify-content: center;
-        margin-bottom: 4rem;
-        flex-wrap: wrap;
-    }
-
-    .btn {
-        padding: 1rem 2.75rem;
-        font-size: 1rem;
-        font-weight: 600;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        letter-spacing: 0.5px;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        color: #fff;
-        box-shadow: 0 10px 25px rgba(17, 153, 142, 0.3);
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 15px 40px rgba(17, 153, 142, 0.5);
-        color: #fff;
-    }
-
-    .btn-secondary {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(5px);
-    }
-
-    .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.25);
-        border-color: #fff;
-        transform: translateY(-4px);
-    }
-
-    .features {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2.5rem;
-        margin-top: 3.5rem;
-        padding: 0 2rem;
-    }
-
-    .feature-card {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 16px;
-        padding: 2.5rem;
-        backdrop-filter: blur(12px);
-        transition: all 0.4s ease;
-        text-align: center;
-        animation: slideIn 0.6s ease-out;
-    }
-
-    .feature-card:nth-child(2) {
-        animation-delay: 0.15s;
-    }
-
-    .feature-card:nth-child(3) {
-        animation-delay: 0.3s;
-    }
-
-    .feature-card:hover {
-        background: rgba(255, 255, 255, 0.18);
-        transform: translateY(-12px);
-        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        border-color: rgba(255, 255, 255, 0.4);
-    }
-
-    .feature-icon {
-        font-size: 3.5rem;
-        margin-bottom: 1.25rem;
-        display: inline-block;
-    }
-
-    .feature-card h3 {
-        font-size: 1.35rem;
-        margin-bottom: 0.875rem;
+    .brand-text {
+        font-size: 1.25rem;
         font-weight: 700;
         letter-spacing: -0.5px;
     }
-
-    .feature-card p {
-        font-size: 0.975rem;
-        opacity: 0.92;
-        line-height: 1.6;
+    .brand-sub {
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.5);
         font-weight: 400;
+        display: block;
+        margin-top: -2px;
+    }
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .nav-link-item {
+        color: rgba(255,255,255,0.75);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+    .nav-link-item:hover {
+        color: white;
+        background: rgba(255,255,255,0.08);
+    }
+    .nav-btn {
+        background: var(--gradient-primary);
+        color: white !important;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+        transition: all 0.2s;
+    }
+    .nav-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(99,102,241,0.45);
+    }
+    .nav-btn-ghost {
+        border: 1px solid rgba(255,255,255,0.2);
+        color: rgba(255,255,255,0.85) !important;
+    }
+    .nav-btn-ghost:hover {
+        border-color: rgba(255,255,255,0.4);
+        background: rgba(255,255,255,0.06);
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ── Hero ── */
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 20px 60px;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+    .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.25) 0%, transparent 70%),
+                    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(139,92,246,0.15) 0%, transparent 60%),
+                    radial-gradient(ellipse 50% 40% at 20% 70%, rgba(6,182,212,0.1) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .hero-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(60px);
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    .hero-orb-1 {
+        width: 500px; height: 500px;
+        background: rgba(99,102,241,0.2);
+        top: -200px; right: -100px;
+        animation: float 8s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+        width: 350px; height: 350px;
+        background: rgba(139,92,246,0.15);
+        bottom: -100px; left: -80px;
+        animation: float 10s ease-in-out infinite reverse;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(99,102,241,0.15);
+        border: 1px solid rgba(99,102,241,0.3);
+        color: var(--primary-light);
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 28px;
+        animation: fadeInUp 0.6s ease both;
+    }
+    .hero-badge .dot {
+        width: 6px; height: 6px;
+        background: var(--primary-light);
+        border-radius: 50%;
+        animation: pulse-ring 2s infinite;
+    }
+    .hero-title {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin-bottom: 24px;
+        animation: fadeInUp 0.6s ease 0.1s both;
+    }
+    .hero-title .highlight {
+        background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #67e8f9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .hero-desc {
+        font-size: 1.1rem;
+        color: rgba(255,255,255,0.65);
+        max-width: 560px;
+        margin: 0 auto 40px;
+        line-height: 1.8;
+        font-weight: 400;
+        animation: fadeInUp 0.6s ease 0.2s both;
+    }
+    .hero-actions {
+        display: flex;
+        gap: 14px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 80px;
+        animation: fadeInUp 0.6s ease 0.3s both;
+    }
+    .btn-hero-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--gradient-primary);
+        color: white;
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 8px 24px rgba(99,102,241,0.35);
+        transition: all 0.25s;
+        border: none;
+        cursor: pointer;
+    }
+    .btn-hero-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 36px rgba(99,102,241,0.5);
+        color: white;
+    }
+    .btn-hero-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.85);
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid rgba(255,255,255,0.15);
+        transition: all 0.25s;
+        backdrop-filter: blur(10px);
+    }
+    .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.3);
+        color: white;
+        transform: translateY(-3px);
     }
 
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ── Stats ── */
+    .hero-stats {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 0.6s ease 0.4s both;
+    }
+    .stat-item {
+        text-align: center;
+    }
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.45);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .stat-divider {
+        width: 1px;
+        background: rgba(255,255,255,0.1);
+        align-self: stretch;
     }
 
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px);
-        }
-        50% {
-            transform: translateY(20px);
-        }
+    /* ── Features ── */
+    .features-section {
+        padding: 80px 20px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .section-label {
+        display: inline-block;
+        background: rgba(99,102,241,0.12);
+        color: var(--primary-light);
+        padding: 5px 14px;
+        border-radius: 100px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+    .section-title {
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+        color: white;
+    }
+    .section-desc {
+        color: rgba(255,255,255,0.5);
+        font-size: 1rem;
+        max-width: 500px;
+        margin: 0 auto 56px;
+        line-height: 1.7;
+    }
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+    }
+    .feature-card {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 32px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(99,102,241,0.5), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .feature-card:hover {
+        background: rgba(255,255,255,0.07);
+        border-color: rgba(99,102,241,0.3);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon-wrap {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    .feature-icon-wrap.purple { background: rgba(99,102,241,0.15); }
+    .feature-icon-wrap.teal { background: rgba(6,182,212,0.15); }
+    .feature-icon-wrap.green { background: rgba(16,185,129,0.15); }
+    .feature-icon-wrap.orange { background: rgba(245,158,11,0.15); }
+    .feature-card h3 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 10px;
+        letter-spacing: -0.3px;
+    }
+    .feature-card p {
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.5);
+        line-height: 1.7;
+        margin: 0;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+        padding: 80px 20px;
+        text-align: center;
+    }
+    .cta-card {
+        max-width: 700px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.1) 100%);
+        border: 1px solid rgba(99,102,241,0.25);
+        border-radius: 28px;
+        padding: 60px 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-card::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .cta-card h2 {
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+        color: white;
+    }
+    .cta-card p {
+        color: rgba(255,255,255,0.6);
+        margin-bottom: 36px;
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    /* Footer override for dark bg */
+    .app-footer {
+        background: rgba(0,0,0,0.3) !important;
+        border-top: 1px solid rgba(255,255,255,0.05) !important;
+        margin-top: 0 !important;
     }
 
     @media (max-width: 768px) {
-        .navbar {
-            padding: 1rem 0 !important;
-        }
-
-        .navbar .container {
-            padding: 0 1rem !important;
-        }
-
-        .navbar-brand {
-            font-size: 1.3rem !important;
-            gap: 0.5rem !important;
-        }
-
-        .brand-icon {
-            width: 42px !important;
-            height: 42px !important;
-            font-size: 1.5rem !important;
-        }
-
-        .navbar-nav {
-            gap: 1rem !important;
-            font-size: 0.85rem !important;
-        }
-
-        .hero-section {
-            padding: 40px 15px !important;
-            min-height: 70vh !important;
-        }
-
-        .hero-content h1 {
-            font-size: 2.25rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero-content p {
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-buttons {
-            flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .btn {
-            width: 100% !important;
-        }
-
-        .features {
-            grid-template-columns: 1fr;
-            gap: 1.75rem;
-            margin-top: 2.5rem;
-            padding: 0 1rem;
-        }
-
-        .feature-card {
-            padding: 1.75rem;
-        }
-
-        .feature-icon {
-            font-size: 3rem !important;
-        }
-
-        .feature-card h3 {
-            font-size: 1.15rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .navbar {
-            padding: 0.75rem 0 !important;
-        }
-
-        .navbar .container {
-            padding: 0 0.75rem !important;
-        }
-
-        .navbar-brand {
-            font-size: 1.1rem !important;
-            gap: 0.4rem !important;
-        }
-
-        .brand-icon {
-            width: 38px !important;
-            height: 38px !important;
-            font-size: 1.3rem !important;
-        }
-
-        .navbar-nav {
-            gap: 0.75rem !important;
-            font-size: 0.75rem !important;
-        }
-
-        .navbar-nav a,
-        .navbar-nav button {
-            font-size: 0.8rem !important;
-        }
-
-        .hero-section {
-            padding: 30px 12px !important;
-            min-height: 60vh !important;
-        }
-
-        .hero-content h1 {
-            font-size: 1.75rem !important;
-            margin-bottom: 0.75rem !important;
-            line-height: 1.2 !important;
-        }
-
-        .hero-content p {
-            font-size: 0.9rem !important;
-            margin-bottom: 1.25rem !important;
-            line-height: 1.5 !important;
-        }
-
-        .hero-buttons {
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-bottom: 2rem;
-        }
-
-        .btn {
-            width: 100% !important;
-            padding: 0.75rem 1.5rem !important;
-            font-size: 0.9rem !important;
-        }
-
-        .features {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-            margin-top: 2rem;
-            padding: 0 0.75rem;
-        }
-
-        .feature-card {
-            padding: 1.25rem;
-            border-radius: 12px;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem !important;
-            margin-bottom: 0.75rem !important;
-        }
-
-        .feature-card h3 {
-            font-size: 1rem !important;
-            margin-bottom: 0.5rem !important;
-        }
-
-        .feature-card p {
-            font-size: 0.85rem !important;
-        }
+        .hero { padding: 60px 16px 40px; }
+        .hero-title { letter-spacing: -1px; }
+        .hero-actions { flex-direction: column; align-items: center; }
+        .btn-hero-primary, .btn-hero-secondary { width: 100%; max-width: 320px; justify-content: center; }
+        .hero-stats { gap: 24px; }
+        .stat-divider { display: none; }
+        .features-section { padding: 60px 16px; }
+        .features-grid { grid-template-columns: 1fr; }
+        .cta-card { padding: 40px 24px; }
+        .site-navbar .inner { padding: 0 1rem; }
+        .nav-links { gap: 4px; }
+        .nav-link-item { padding: 6px 10px; font-size: 0.82rem; }
     }
 </style>
 @endsection
 
 @section('navbar')
-<nav class="navbar">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <div class="brand-icon">🅿️</div>
-            <div>Parkir Manager</div>
+<nav class="site-navbar">
+    <div class="inner">
+        <a class="brand" href="/">
+            <div class="brand-logo">
+                <i class="fas fa-parking" style="color:white;"></i>
+            </div>
+            <div>
+                <span class="brand-text">ParkSmart</span>
+                <span class="brand-sub">Sistem Parkir Modern</span>
+            </div>
         </a>
         @if (Route::has('login'))
-            <div class="navbar-nav">
-                @auth
-                    <a href="{{ url('/dashboard') }}">Dashboard</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit">Logout</button>
-                    </form>
-                @else
-                    <a href="{{ route('login') }}">Login</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">Register</a>
-                    @endif
-                @endauth
-            </div>
+        <div class="nav-links">
+            @auth
+                <a href="{{ url('/dashboard') }}" class="nav-link-item">
+                    <i class="fas fa-chart-line" style="margin-right:6px;"></i>Dashboard
+                </a>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="nav-link-item" style="background:none;border:none;cursor:pointer;font-family:inherit;">
+                        <i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Logout
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="nav-link-item nav-btn nav-btn-ghost">Masuk</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="nav-link-item nav-btn">Daftar</a>
+                @endif
+            @endauth
+        </div>
         @endif
     </div>
 </nav>
 @endsection
 
 @section('content')
-<div class="hero-section">
-    <div class="hero-content">
-        <h1>Sistem Manajemen Parkir Modern</h1>
-        <p>Kelola parkir Anda dengan mudah, cepat, dan efisien menggunakan teknologi terkini</p>
-        <div class="hero-buttons">
-            <a href="{{ route('login') }}" class="btn btn-primary">Mulai Sekarang</a>
-            <a href="#features" class="btn btn-secondary">Pelajari Lebih</a>
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+
+    <div class="hero-badge">
+        <span class="dot"></span>
+        Sistem Parkir Generasi Baru
+    </div>
+
+    <h1 class="hero-title">
+        Kelola Parkir<br>
+        <span class="highlight">Lebih Cerdas</span>
+    </h1>
+
+    <p class="hero-desc">
+        Platform manajemen parkir modern yang memudahkan pencatatan kendaraan masuk & keluar, perhitungan biaya otomatis, dan laporan real-time.
+    </p>
+
+    <div class="hero-actions">
+        <a href="/Masuk" class="btn-hero-primary">
+            <i class="fas fa-car"></i>
+            Kendaraan Masuk
+        </a>
+        <a href="/Riwayat" class="btn-hero-secondary">
+            <i class="fas fa-history"></i>
+            Lihat Riwayat
+        </a>
+    </div>
+
+    <div class="hero-stats">
+        <div class="stat-item">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Otomatis</div>
         </div>
-        <div class="features" id="features">
-            <div class="feature-card">
-                <div class="feature-icon">⏱️</div>
-                <h3>Pencatatan Otomatis</h3>
-                <p>Sistem otomatis mencatat waktu masuk dan keluar kendaraan secara real-time</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3>Perhitungan Biaya</h3>
-                <p>Perhitungan tarif parkir otomatis berdasarkan durasi parkir yang fleksibel</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Dashboard Lengkap</h3>
-                <p>Dashboard intuitif dengan laporan real-time dan analitik mendalam</p>
-            </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">Real-time</div>
+            <div class="stat-label">Monitoring</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Tersedia</div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+    <div style="text-align:center;">
+        <span class="section-label">Fitur Unggulan</span>
+        <h2 class="section-title">Semua yang Anda Butuhkan</h2>
+        <p class="section-desc">Dirancang untuk kemudahan operator parkir dengan antarmuka yang intuitif dan modern.</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card animate-fadeInUp delay-1">
+            <div class="feature-icon-wrap purple">
+                <i class="fas fa-car-side" style="color:#818cf8;"></i>
+            </div>
+            <h3>Pencatatan Kendaraan</h3>
+            <p>Catat kendaraan masuk dan keluar dengan cepat. Mendukung motor dan mobil dengan nomor plat yang terverifikasi.</p>
+        </div>
+        <div class="feature-card animate-fadeInUp delay-2">
+            <div class="feature-icon-wrap teal">
+                <i class="fas fa-calculator" style="color:#67e8f9;"></i>
+            </div>
+            <h3>Hitung Biaya Otomatis</h3>
+            <p>Biaya parkir dihitung secara otomatis berdasarkan durasi dan jenis kendaraan. Tidak perlu hitung manual lagi.</p>
+        </div>
+        <div class="feature-card animate-fadeInUp delay-3">
+            <div class="feature-icon-wrap green">
+                <i class="fas fa-receipt" style="color:#6ee7b7;"></i>
+            </div>
+            <h3>Tiket & Nota Digital</h3>
+            <p>Cetak tiket masuk dan nota pembayaran langsung dari sistem. Tersedia dalam format yang rapi dan profesional.</p>
+        </div>
+        <div class="feature-card animate-fadeInUp delay-4">
+            <div class="feature-icon-wrap orange">
+                <i class="fas fa-chart-bar" style="color:#fcd34d;"></i>
+            </div>
+            <h3>Dashboard Analitik</h3>
+            <p>Pantau statistik parkir secara real-time. Lihat total kendaraan, pendapatan, dan riwayat lengkap dalam satu tampilan.</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="cta-card animate-fadeInUp">
+        <h2>Siap Mulai Sekarang?</h2>
+        <p>Mulai kelola parkir Anda dengan lebih efisien dan modern. Gratis, cepat, dan mudah digunakan.</p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+            <a href="/Masuk" class="btn-hero-primary">
+                <i class="fas fa-plus-circle"></i>
+                Mulai Sekarang
+            </a>
+            <a href="/Riwayat" class="btn-hero-secondary">
+                <i class="fas fa-table"></i>
+                Lihat Dashboard
+            </a>
+        </div>
+    </div>
+</section>
 @endsection

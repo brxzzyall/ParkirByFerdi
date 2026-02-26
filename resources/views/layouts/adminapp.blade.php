@@ -1,312 +1,269 @@
 @extends('layouts.master')
 
-@section('title', 'Aplikasi Parkir - Riwayat')
+@section('title', 'ParkSmart — Dashboard Riwayat')
 
 @section('styles')
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    /* Modern Scrollbar Styling */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 10px;
-        transition: background 0.3s ease;
-    }
-    
-    ::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.5);
-    }
-    
-    /* Firefox Scrollbar */
-    * {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-    }
-    
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
         min-height: 100vh;
     }
-    
-    .navbar-gradient {
-        background: linear-gradient(90deg, #2d3561 0%, #667eea 100%);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+    /* ── Navbar ── */
+    .app-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    
+    .app-navbar .inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: white;
+    }
+    .nav-brand-icon {
+        width: 38px;
+        height: 38px;
+        background: var(--gradient-primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+        flex-shrink: 0;
+    }
+    .nav-brand-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: white;
+    }
+    .nav-brand-sub {
+        font-size: 0.68rem;
+        color: rgba(255,255,255,0.45);
+        display: block;
+        margin-top: -2px;
+    }
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .nav-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255,255,255,0.75);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.05);
+        transition: all 0.2s;
+    }
+    .nav-pill:hover {
+        color: white;
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.2);
+    }
+    .nav-pill.active {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+    }
+
+    /* ── Card Modern ── */
     .card-modern {
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius-xl);
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
-    .card-modern:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
-    }
-    
     .card-header-modern {
-        border: none;
-        padding: 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: transparent;
+        padding: 20px 24px;
         color: white;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    
     .card-header-modern h4 {
         margin: 0;
-        font-size: 24px;
+        font-size: 1.1rem;
         font-weight: 700;
-    }
-    
-    .table-modern {
-        margin-bottom: 0;
-    }
-    
-    .table-modern thead {
-        background: transparent;
-    }
-    
-    .table-modern thead th {
-        border: none;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-        font-weight: 600;
+        letter-spacing: -0.3px;
         color: white;
-        padding: 12px 16px;
-        font-size: 15px;
+    }
+
+    /* ── Table ── */
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+    .table-modern thead th {
+        background: rgba(99,102,241,0.08);
+        color: rgba(255,255,255,0.5);
+        font-size: 0.7rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        letter-spacing: 0.8px;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        white-space: nowrap;
     }
-    
     .table-modern tbody tr {
-        border-bottom: 1px solid #e0e0e0;
-        transition: background-color 0.2s ease;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        transition: background 0.15s;
     }
-    
     .table-modern tbody tr:hover {
-        background-color: transparent;
+        background: rgba(255,255,255,0.03);
     }
-    
     .table-modern tbody td {
-        padding: 18px 16px;
-        color: #333;
-        font-size: 15px;
+        padding: 16px;
+        color: rgba(255,255,255,0.8);
+        font-size: 0.875rem;
         vertical-align: middle;
     }
-    
+
+    /* ── Buttons ── */
     .btn-sm-modern {
-        padding: 8px 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 14px;
         border-radius: 8px;
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 0.78rem;
+        font-weight: 600;
         border: none;
         cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .btn-info-modern {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-    
-    .btn-info-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        color: white;
-    }
-    
-    .btn-warning-modern {
-        background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
-        color: white;
-    }
-    
-    .btn-warning-modern:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(245, 175, 25, 0.4);
-        color: white;
-    }
-    
-    .btn-secondary-modern {
-        background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
-        color: white;
-        box-shadow: 0 10px 25px rgba(245, 175, 25, 0.4);
-    }
-    
-    .btn-secondary-modern:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 35px rgba(245, 175, 25, 0.5);
-        color: white;
-    }
-    }
-    
-    .btn-secondary-modern:hover {
-        background: #d0d0d0;
-        color: #333;
-        transform: translateY(-2px);
+        transition: all 0.2s;
         text-decoration: none;
+        white-space: nowrap;
     }
-    
-    .pagination-modern .page-link {
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        color: #667eea;
-        margin: 0 4px;
+    .btn-info-modern {
+        background: rgba(99,102,241,0.15);
+        color: #818cf8;
+        border: 1px solid rgba(99,102,241,0.25);
     }
-    
-    .pagination-modern .page-link:hover {
-        background: #667eea;
-        color: white;
-        border-color: #667eea;
+    .btn-info-modern:hover {
+        background: rgba(99,102,241,0.25);
+        color: #a5b4fc;
+        transform: translateY(-1px);
     }
-    
-    .pagination-modern .page-item.active .page-link {
-        background: #667eea;
-        border-color: #667eea;
+    .btn-warning-modern {
+        background: rgba(245,158,11,0.15);
+        color: #fcd34d;
+        border: 1px solid rgba(245,158,11,0.25);
     }
-    
+    .btn-warning-modern:hover {
+        background: rgba(245,158,11,0.25);
+        color: #fde68a;
+        transform: translateY(-1px);
+    }
+    .btn-secondary-modern {
+        background: rgba(16,185,129,0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(16,185,129,0.25);
+    }
+    .btn-secondary-modern:hover {
+        background: rgba(16,185,129,0.25);
+        color: #a7f3d0;
+        transform: translateY(-1px);
+    }
+
+    /* ── Status Badges ── */
     .status-badge {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
         font-weight: 600;
+        white-space: nowrap;
     }
-    
     .status-active {
-        background: linear-gradient(135deg, rgba(17, 153, 142, 0.2) 0%, rgba(56, 239, 125, 0.2) 100%);
-        color: #0d7a6f;
+        background: rgba(16,185,129,0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(16,185,129,0.25);
     }
-    
     .status-completed {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
-        color: #334499;
+        background: rgba(99,102,241,0.15);
+        color: #a5b4fc;
+        border: 1px solid rgba(99,102,241,0.25);
+    }
+
+    /* ── Pagination ── */
+    .pagination-modern .page-link {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.6);
+        border-radius: 8px;
+        margin: 0 3px;
+        padding: 7px 13px;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+    .pagination-modern .page-link:hover {
+        background: rgba(99,102,241,0.2);
+        border-color: rgba(99,102,241,0.3);
+        color: white;
+    }
+    .pagination-modern .page-item.active .page-link {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.3);
     }
 
     @media (max-width: 768px) {
-        .navbar-gradient {
-            padding: 10px 0 !important;
-        }
-
-        .card-modern {
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header-modern {
-            padding: 16px !important;
-            font-size: 16px !important;
-        }
-
-        .card-header-modern h4 {
-            font-size: 18px !important;
-        }
-
-        .table-modern thead th {
-            padding: 8px !important;
-            font-size: 11px !important;
-        }
-
-        .table-modern tbody td {
-            padding: 8px !important;
-            font-size: 12px !important;
-        }
-
-        .btn-sm-modern {
-            padding: 4px 8px !important;
-            font-size: 11px !important;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .navbar-gradient {
-            padding: 8px 0 !important;
-        }
-
-        .d-flex {
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .card-modern {
-            border-radius: 12px;
-        }
-
-        .card-header-modern {
-            padding: 12px !important;
-        }
-
-        .card-header-modern h4 {
-            font-size: 16px !important;
-        }
-
-        .table-modern {
-            font-size: 11px;
-        }
-
-        .table-modern thead th {
-            padding: 6px !important;
-            font-size: 10px !important;
-        }
-
-        .table-modern tbody td {
-            padding: 6px !important;
-            font-size: 11px !important;
-        }
-
-        .btn {
-            width: 100%;
-        }
-
-        .btn-sm-modern {
-            padding: 4px 6px !important;
-            font-size: 10px !important;
-        }
-
-        .pagination-modern {
-            flex-wrap: wrap;
-            gap: 4px;
-        }
-
-        .pagination-modern .page-link {
-            padding: 4px 8px;
-            font-size: 11px;
-            margin: 2px;
-        }
+        .app-navbar .inner { padding: 0 1rem; }
+        .nav-brand-name { font-size: 1rem; }
+        .table-modern thead th { padding: 10px 12px; font-size: 0.62rem; }
+        .table-modern tbody td { padding: 12px; font-size: 0.8rem; }
+        .btn-sm-modern { padding: 5px 10px; font-size: 0.72rem; }
     }
 </style>
 @endsection
 
 @section('navbar')
-<!-- Navigation -->
-<nav class="navbar-gradient text-white py-3 py-sm-4 sticky-top" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);">
-    <div class="container-lg">
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <div class="d-flex align-items-center gap-2 gap-sm-3">
-                <div style="width: 45px; height: 45px; min-width: 45px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🅿️</div>
-                <a href="/" style="text-decoration: none; color: white;">
-                    <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Parkir Manager</h3>
-                    <small style="opacity: 0.9; font-size: 11px; display: block;">Riwayat Kendaraan</small>
-                </a>
+<nav class="app-navbar">
+    <div class="inner">
+        <a href="/" class="nav-brand">
+            <div class="nav-brand-icon">
+                <i class="fas fa-parking" style="color:white;"></i>
             </div>
+            <div>
+                <span class="nav-brand-name">ParkSmart</span>
+                <span class="nav-brand-sub">Dashboard Riwayat</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <a href="/" class="nav-pill active">
+                <i class="fas fa-plus"></i>
+                Input Baru
+            </a>
         </div>
     </div>
 </nav>
-@endsection
-
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
