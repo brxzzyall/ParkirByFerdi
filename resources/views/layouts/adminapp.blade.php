@@ -1,0 +1,389 @@
+@extends('layouts.master')
+
+@section('title', 'ParkSmart — Dashboard Riwayat')
+
+@section('navbar')
+    <nav class="app-navbar">
+        <div class="inner">
+            <a class="nav-brand" href="{{ route('admin.dashboard') }}">
+                <span class="nav-brand-icon"><i class="fas fa-parking"></i></span>
+                <span>
+                    <div class="nav-brand-name">ParkSmart</div>
+                    <span class="nav-brand-sub">Dashboard Riwayat</span>
+                </span>
+            </a>
+            <div class="nav-burger" id="navBurger" aria-label="Toggle Navigation" aria-expanded="false">
+                <i class="fas fa-ellipsis-v" style="font-size: 1.1rem; color: white;"></i>
+            </div>
+            <div class="nav-actions nav-menu" id="navMenu">
+                <a class="nav-pill" href="{{ route('home.dashboard') }}" style="background: rgba(34, 197, 94, 0.2); color: #d9fdd4; border-color: rgba(34, 197, 94, 0.45);">
+                    <i class="fas fa-plus" style="font-size:0.8rem;"></i>
+                    <span style="font-size:0.85rem; font-weight:600;">Kendaraan</span>
+                </a>
+                @if(session('user_name'))
+                    @php
+                        $navPhoto = session('user_photo');
+                        if ($navPhoto) {
+                            $navPhoto = preg_replace('#^(?:/)?(?:storage/|public/storage/)#', '', $navPhoto);
+                            $navPhoto = '/storage/' . ltrim($navPhoto, '/');
+                        }
+                    @endphp
+                    <a class="nav-pill" href="{{ session('user_role') === 'owner' ? route('owner.profile') : route('petugas.profile') }}" style="display:flex; align-items:center; gap:8px;">
+                        @if(!empty($navPhoto))
+                            <img src="{{ $navPhoto }}" alt="Foto Profil" style="width:28px; height:28px; border-radius:50%; object-fit:cover; border:1px solid rgba(255,255,255,0.3);">
+                        @else
+                            <i class="fas fa-user-circle" style="font-size:1.2rem;"></i>
+                        @endif
+                        <span>{{ session('user_name') }}</span>
+                    </a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" style="margin:0; display:inline-block;">
+                    @csrf
+                    <button type="submit" class="nav-pill" style="border:none; background:transparent; cursor:pointer;">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const burger = document.getElementById('navBurger');
+        const menu = document.getElementById('navMenu');
+
+        burger.addEventListener('click', function () {
+            const expanded = burger.getAttribute('aria-expanded') === 'true';
+            burger.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            menu.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!burger.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.remove('active');
+                burger.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+</script>
+@endsection
+
+@section('styles')
+<style>
+    body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        min-height: 100vh;
+    }
+
+    /* ── Navbar ── */
+    .app-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .app-navbar .inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: white;
+    }
+    .nav-brand-icon {
+        width: 38px;
+        height: 38px;
+        background: var(--gradient-primary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+        flex-shrink: 0;
+    }
+    .nav-brand-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: white;
+    }
+    .nav-brand-sub {
+        font-size: 0.68rem;
+        color: rgba(255,255,255,0.45);
+        display: block;
+        margin-top: -2px;
+    }
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+    }
+    .nav-burger {
+        display: none;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        cursor: pointer;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+    .nav-burger:hover {
+        background: rgba(255,255,255,0.16);
+    }
+    .nav-menu {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .nav-menu.active {
+        display: flex;
+    }
+    .nav-menu.hidden {
+        display: none;
+    }
+    .nav-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: rgba(255,255,255,0.75);
+        text-decoration: none;
+        font-size: 0.875rem;
+        font-weight: 500;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.05);
+        transition: all 0.2s;
+    }
+    .nav-pill:hover {
+        color: white;
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.2);
+    }
+    .nav-pill.active {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+    }
+
+    @media (max-width: 768px) {
+        .nav-burger {
+            display: flex;
+        }
+        .nav-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 62px;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 8px;
+            background: rgba(15,23,42,0.96);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 10px;
+            padding: 10px;
+            min-width: 190px;
+            z-index: 1100;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .nav-menu.active {
+            display: flex;
+        }
+        .nav-actions {
+            gap: 10px;
+        }
+    }
+
+    /* ── Card Modern ── */
+    .card-modern {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-header-modern {
+        background: transparent;
+        padding: 20px 24px;
+        color: white;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .card-header-modern h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: white;
+    }
+
+    /* ── Table ── */
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+    .table-modern thead th {
+        background: rgba(99,102,241,0.08);
+        color: rgba(255,255,255,0.5);
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        white-space: nowrap;
+    }
+    .table-modern tbody tr {
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        transition: background 0.15s;
+    }
+    .table-modern tbody tr:hover {
+        background: rgba(255,255,255,0.03);
+    }
+    .table-modern tbody td {
+        padding: 16px;
+        color: rgba(255,255,255,0.8);
+        font-size: 0.875rem;
+        vertical-align: middle;
+    }
+
+    /* ── Buttons ── */
+    .btn-sm-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    .btn-info-modern {
+        background: rgba(99,102,241,0.15);
+        color: #818cf8;
+        border: 1px solid rgba(99,102,241,0.25);
+    }
+    .btn-info-modern:hover {
+        background: rgba(99,102,241,0.25);
+        color: #a5b4fc;
+        transform: translateY(-1px);
+    }
+    .btn-warning-modern {
+        background: rgba(245,158,11,0.15);
+        color: #fcd34d;
+        border: 1px solid rgba(245,158,11,0.25);
+    }
+    .btn-warning-modern:hover {
+        background: rgba(245,158,11,0.25);
+        color: #fde68a;
+        transform: translateY(-1px);
+    }
+    .btn-secondary-modern {
+        background: rgba(16,185,129,0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(16,185,129,0.25);
+    }
+    .btn-secondary-modern:hover {
+        background: rgba(16,185,129,0.25);
+        color: #a7f3d0;
+        transform: translateY(-1px);
+    }
+
+    /* ── Status Badges ── */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .status-active {
+        background: rgba(16,185,129,0.15);
+        color: #6ee7b7;
+        border: 1px solid rgba(16,185,129,0.25);
+    }
+    .status-completed {
+        background: rgba(99,102,241,0.15);
+        color: #a5b4fc;
+        border: 1px solid rgba(99,102,241,0.25);
+    }
+
+    /* ── Pagination ── */
+    .pagination-modern .page-link {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: rgba(255,255,255,0.6);
+        border-radius: 8px;
+        margin: 0 3px;
+        padding: 7px 13px;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+    }
+    .pagination-modern .page-link:hover {
+        background: rgba(99,102,241,0.2);
+        border-color: rgba(99,102,241,0.3);
+        color: white;
+    }
+    .pagination-modern .page-item.active .page-link {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 12px rgba(99,102,241,0.3);
+    }
+
+    @media (max-width: 768px) {
+        .app-navbar .inner { padding: 0 1rem; }
+        .nav-brand-name { font-size: 1rem; }
+        .table-modern thead th { padding: 10px 12px; font-size: 0.62rem; }
+        .table-modern tbody td { padding: 12px; font-size: 0.8rem; }
+        .btn-sm-modern { padding: 5px 10px; font-size: 0.72rem; }
+    }
+</style>
+@endsection
+
+@section('navbar')
+<nav class="app-navbar">
+    <div class="inner">
+        <a href="/" class="nav-brand">
+            <div class="nav-brand-icon">
+                <i class="fas fa-parking" style="color:white;"></i>
+            </div>
+            <div>
+                <span class="nav-brand-name">ParkSmart</span>
+                <span class="nav-brand-sub">Dashboard Riwayat</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <a href="/" class="nav-pill active">
+                <i class="fas fa-plus"></i>
+                Input Baru
+            </a>
+        </div>
+    </div>
+</nav>
+@endsection
